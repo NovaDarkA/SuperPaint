@@ -32,7 +32,7 @@ class Canvas(QWidget):
        
     def draw_examples(self):
         with QPainter(self.image) as painter:
-            painter.setPen(QPen(QColor("#ff00000"),10,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
+            painter.setPen(QPen(QColor("#ff0000"),10,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
             painter.drawLine(300,0,300,600)
             painter.drawLine(0,300,600,300)
             painter.drawRect(265,265,70,70)
@@ -76,7 +76,7 @@ class Canvas(QWidget):
             self.update
     def draw_grid(self, value):
         with QPainter(self.image) as painter:
-            painter.setPen(QPen(QColor("#ff00000"),10,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
+            painter.setPen(QPen(QColor("#ff0000"),10,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
             w = self.image.width()
             h = self.image.height()
             div = int(w/int(value)) #600/10
@@ -85,19 +85,36 @@ class Canvas(QWidget):
             for x in range(1, total_l):
                 painter.drawLine(div*x,0,div*x,h)
                 painter.drawLine(0,div*x,w,div*x)
-        
         self.update()
     def draw_star(self, value):
-        with QPainter(self.image) as painter:
-            painter.setPen(QPen(QColor("#ff00000"),10,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
-            w = self.image.width()
-            h = self.image.height()
-            div = int(w/int(value)) #600/10
             self.clear()
-            mid_w = w // 2
-            mid_h = h // 2
-            painter.drawLine(mid_h,0,mid_w,0)
-            painter.drawLine(0,mid_h,w,mid_h)
-            for x in range (1,div):
-                painter.drawLine(mid_w,div,*x,(mid_w+div),mid_h )
-        self.update()
+            with QPainter(self.image) as painter:
+                painter.setPen(QPen(QColor("#ff0000"), 1,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
+                w = self.image.width()
+                h = self.image.height()
+                mid_w = w // 2
+                mid_h = h // 2
+                div = int(mid_w/ int(value))#300/10
+                painter.drawLine(mid_h, 0, mid_w, h)
+                painter.drawLine(0, mid_h, w, mid_h)
+                for x in range(1, value):
+                    painter.drawLine(mid_w, div*x, (mid_w+ (div*x)), mid_h)
+                    painter.drawLine(mid_w, div*x, (mid_w- (div*x)), mid_h)
+                    painter.drawLine(mid_w, h -(div*x), (mid_w+ (div*x)), mid_w)
+                    painter.drawLine(mid_w, h -(div*x), (mid_w- (div*x)), mid_w)
+            self.update()
+    def draw_f(self, value):
+            self.clear()
+            with QPainter(self.image) as painter:
+                painter.setPen(QPen(QColor("#ff0000"), 1,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
+                w = self.image.width()
+                h = self.image.height()
+                mid_w = w // 2
+                mid_h = h // 2
+                div = int(mid_w/ int(value))#300/10
+                painter.drawLine(mid_w, 0, mid_w, h)
+                painter.drawLine(0, mid_h, w, mid_h)
+                for x in range(1,value):
+                    painter.drawLine(mid_w,((div*x)-mid_w), h+(div*x))
+                    #painter.drawLine(mid_w + (div*x), mid_w, mid_w, h + (div*x))
+            self.update()
