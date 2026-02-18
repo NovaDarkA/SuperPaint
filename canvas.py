@@ -105,6 +105,30 @@ class Canvas(QWidget):
             self.update()
     def draw_f(self, value):
             self.clear()
+            value = int(value)
+            if value <= 0:
+                return
+            with QPainter(self.image) as painter:
+                painter.setPen(QPen(QColor("#ff0000"), 1,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
+                w = self.image.width()
+                h = self.image.height()
+                mid_w = w // 2
+                mid_h = h // 2
+                div = max(1, int(min(mid_w, mid_h) / value))
+                painter.drawLine(mid_w, 0, mid_w, h)
+                painter.drawLine(0, mid_h, w, mid_h)
+                for x in range(1, value + 1):
+                    painter.drawLine(mid_w,(div*x)+mid_h,mid_w+(div*x),h)
+                    painter.drawLine(mid_w,(div*x)+mid_h,mid_w-(div*x),h)
+                    painter.drawLine(w,h-(div*x),w-(div*x),mid_h)
+                    painter.drawLine(h,(div*x),w-(div*x),mid_h)
+                    painter.drawLine(mid_w-(div*x),0, mid_w,mid_h-(div*x))
+                    painter.drawLine(0,div*x,div*x,mid_h)
+                    painter.drawLine(mid_w+(div*x),0,mid_w,mid_h-(div*x))
+                    painter.drawLine((div*x),mid_h,0,h-(div*x))
+            self.update()
+    def draw_stardoble(self, value):
+            self.clear()
             with QPainter(self.image) as painter:
                 painter.setPen(QPen(QColor("#ff0000"), 1,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
                 w = self.image.width()
@@ -112,9 +136,37 @@ class Canvas(QWidget):
                 mid_w = w // 2
                 mid_h = h // 2
                 div = int(mid_w/ int(value))#300/10
-                painter.drawLine(mid_w, 0, mid_w, h)
+                painter.drawLine(mid_h, 0, mid_w, h)
                 painter.drawLine(0, mid_h, w, mid_h)
-                for x in range(1,value):
-                    painter.drawLine(mid_w,((div*x)-mid_w), h+(div*x))
-                    #painter.drawLine(mid_w + (div*x), mid_w, mid_w, h + (div*x))
+                for x in range(1, value):
+                    painter.drawLine(mid_w, div*x, (mid_w+ (div*x)), mid_h)
+                    painter.drawLine(mid_w, div*x, (mid_w- (div*x)), mid_h)
+                    painter.drawLine(mid_w, h -(div*x), (mid_w+ (div*x)), mid_w)
+                    painter.drawLine(mid_w, h -(div*x), (mid_w- (div*x)), mid_w)
+            with QPainter(self.image) as painter:
+                painter.setPen(QPen(QColor("#ff0000"), 1,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
+                painter.drawLine(w,0,0,h)
+                painter.drawLine(0,0,w,h)
+                for x in range(1, value):
+                    painter.drawLine(w-(div*x),div*x,mid_w+(div*x),mid_h-(div*x))
+                    painter.drawLine(div*x,w-(mid_w),mid_h-(div*x),mid_w+(div*x))
+                    painter.drawLine(w-(div*x),h-(div*x),mid_h+(div*x),mid_h-(div*x))
+                    painter.drawLine(mid_h-(div*x), mid_h+(div*x), w-(div*x), h-(div*x))
             self.update()
+    def draw_tablero(self, value):
+        self.clear()
+        with QPainter(self.image) as painter:
+            painter.setPen(Qt.PenStyle.NoPen)
+            w = self.image.width()
+            h = self.image.height()
+            w_celda = int(w / int(value))
+            h_celda = int(h/int(value))
+            for fila in range(value):
+                for columna in range(value):
+                    if (fila + columna) % 2 == 0:
+                        painter.setBrush(QColor("#fff"))
+                    else:
+                        painter.setBrush(QColor("#000"))
+                    rect = QRectF(w_celda*columna,h_celda*fila,w_celda,h_celda)
+                    painter.drawRect(rect)
+        self.update()
